@@ -3,10 +3,14 @@ package ar.unrn.tp.modelo;
 import java.time.LocalDate;
 import java.util.Date;
 
+import javax.persistence.Embeddable;
+
+@Embeddable
 public abstract class Promocion<T> {
 
 	private Date fechaDesde;
 	private Date fechaHasta;
+	private double porcentaje;
 
 	public enum Estados {
 		ACTIVO, INACTIVO
@@ -15,7 +19,11 @@ public abstract class Promocion<T> {
 	private Estados estado;
 	private T tipo;
 
-	Promocion(T tipo, LocalDate fechaDesde, LocalDate fechaHasta) {
+	protected Promocion() {
+
+	}
+
+	Promocion(T tipo, LocalDate fechaDesde, LocalDate fechaHasta, double porcentaje) {
 		if (!validarFechas(fechaDesde, fechaHasta)) {
 			throw new RuntimeException("La fecha de fin debe ser despues de la fecha de inicio");
 		}
@@ -23,6 +31,7 @@ public abstract class Promocion<T> {
 		this.fechaHasta = ConversorFechas.convertirADate(fechaHasta);
 		this.estado = Estados.ACTIVO;
 		this.tipo = tipo;
+		this.porcentaje = porcentaje;
 
 	}
 
@@ -48,10 +57,10 @@ public abstract class Promocion<T> {
 		LocalDate hasta = ConversorFechas.convertirALocalDate(fechaHasta);
 
 		if (desde.isBefore(actual) && hasta.isAfter(actual) || desde.equals(actual) || hasta.equals(actual)) {
-			System.out.println("activa");
+
 			return true;
 		}
-		System.out.println("inactiva");
+
 		return false;
 	}
 
@@ -70,6 +79,34 @@ public abstract class Promocion<T> {
 			return false;
 		}
 		return true;
+	}
+
+	protected double getPorcentaje() {
+		return porcentaje;
+	}
+
+	private void setPorcentaje(double porcentaje) {
+		this.porcentaje = porcentaje;
+	}
+
+	private Estados getEstado() {
+		return estado;
+	}
+
+	private void setEstado(Estados estado) {
+		this.estado = estado;
+	}
+
+	private void setFechaDesde(Date fechaDesde) {
+		this.fechaDesde = fechaDesde;
+	}
+
+	private void setFechaHasta(Date fechaHasta) {
+		this.fechaHasta = fechaHasta;
+	}
+
+	private void setTipo(T tipo) {
+		this.tipo = tipo;
 	}
 
 	public abstract double obtenerDescuento(T tipo, double monto);

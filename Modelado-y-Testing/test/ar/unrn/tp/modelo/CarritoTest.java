@@ -7,8 +7,6 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import ar.unrn.tp.modelo.Tarjeta.EstadosTarjeta;
-
 class CarritoTest {
 	private Tienda tienda;
 
@@ -54,8 +52,7 @@ class CarritoTest {
 		producto3 = new Producto("1213", "fideos", categoria3, 200, arcor);
 		producto4 = new Producto("1214", "fideos", categoria3, 250, comarca);
 
-		tarjeta = new Tarjeta(2222, 222, LocalDate.now(), LocalDate.now().plusDays(1), EstadosTarjeta.ACTIVO,
-				TipoTarjeta.MASTER_CARD);
+		tarjeta = new Tarjeta("2222", TipoTarjeta.MASTER_CARD);
 	}
 
 	@Test

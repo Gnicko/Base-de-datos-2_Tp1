@@ -2,15 +2,36 @@ package ar.unrn.tp.modelo;
 
 import java.util.Objects;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+@Entity
 public class Marca {
+	@Id
+	@GeneratedValue
+	private Long id;
 	private String nombre;
 
-	Marca(String nombre) {
+	protected Marca() {
+
+	}
+
+	public Marca(Long id, String nombre) {
+		this.nombre = nombre;
+		this.id = id;
+	}
+
+	public Marca(String nombre) {
 		this.nombre = nombre;
 	}
 
 	public String getNombre() {
 		return nombre;
+	}
+
+	private void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
 
 	@Override
@@ -33,6 +54,14 @@ public class Marca {
 	@Override
 	public String toString() {
 		return "Marca : " + nombre;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 }

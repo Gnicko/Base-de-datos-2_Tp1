@@ -7,6 +7,10 @@ public class Carrito {
 	private ArrayList<Producto> productos;
 	private Cliente cliente;
 
+	public Carrito() {
+		this.productos = new ArrayList<Producto>();
+	}
+
 	public Carrito(Cliente clietne) {
 		this.cliente = clietne;
 		productos = new ArrayList<>();
@@ -70,6 +74,18 @@ public class Carrito {
 			imprimir += p.toString() + "\n";
 		}
 		return imprimir;
+	}
+
+	private Cliente getCliente() {
+		return cliente;
+	}
+
+	private void setCliente(Cliente cliente) {
+		this.cliente = cliente;
+	}
+
+	private void setProductos(ArrayList<Producto> productos) {
+		this.productos = productos;
 	}
 
 }

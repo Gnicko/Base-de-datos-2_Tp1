@@ -1,11 +1,28 @@
 package ar.unrn.tp.modelo;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
+@Entity
 public class Producto {
+	@Id
+	@GeneratedValue
+	private Long id;
+
 	private String codigo;
 	private String descripcion;
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	private Categoria categoria;
 	private double precio;
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	private Marca marca;
+
+	protected Producto() {
+
+	}
 
 	public Producto(String codigo, String descripcion, Categoria categoria, double precio, Marca marca)
 			throws RuntimeException {
@@ -18,6 +35,26 @@ public class Producto {
 		this.precio = precio;
 		if (marca == null)
 			throw new RuntimeException("marca no puede ser null");
+		this.marca = marca;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
+	}
+
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+
+	public void setCategoria(Categoria categoria) {
+		this.categoria = categoria;
+	}
+
+	public void setPrecio(double precio) {
+		this.precio = precio;
+	}
+
+	public void setMarca(Marca marca) {
 		this.marca = marca;
 	}
 
@@ -39,6 +76,14 @@ public class Producto {
 
 	public Marca getMarca() {
 		return marca;
+	}
+
+	private Long getId() {
+		return id;
+	}
+
+	private void setId(Long id) {
+		this.id = id;
 	}
 
 	@Override

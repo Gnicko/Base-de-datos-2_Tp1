@@ -1,42 +1,58 @@
 package ar.unrn.tp.modelo;
 
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.Objects;
 
-public class Tarjeta {
-	private int numero;
-	private int codigo;
-	private Date fechaDesde;
-	private Date fechaHasta;
-	private TipoTarjeta tipoTarjeta;
-	public EstadosTarjeta estado = EstadosTarjeta.ACTIVO;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
-	public enum EstadosTarjeta {
-		ACTIVO, INACTIVO
+@Entity
+public class Tarjeta {
+	@Id
+	@GeneratedValue
+	private Long id;
+
+	private String numero;
+
+	private TipoTarjeta tipoTarjeta;
+
+	protected Tarjeta() {
+
 	}
 
-	Tarjeta(int numero, int codigo, LocalDate fechaDesde, LocalDate fechaHasta, EstadosTarjeta estadoTarjeta,
-			TipoTarjeta tipoTarjeta) {
+	public Tarjeta(String numero, TipoTarjeta tipoTarjeta) {
 		this.numero = numero;
-		this.codigo = codigo;
-		this.fechaDesde = ConversorFechas.convertirADate(fechaDesde);
-		this.fechaHasta = ConversorFechas.convertirADate(fechaHasta);
-		this.estado = estadoTarjeta;
+
 		this.tipoTarjeta = tipoTarjeta;
 	}
 
-	public boolean validarTarjeta() {
-		return estado == EstadosTarjeta.ACTIVO ? true : false;
+	public TipoTarjeta getTipoTarjeta() {
+		return tipoTarjeta;
+	}
+
+	private String getNumero() {
+		return numero;
+	}
+
+	private void setNumero(String numero) {
+		this.numero = numero;
+	}
+
+	private void setTipoTarjeta(TipoTarjeta tipoTarjeta) {
+		this.tipoTarjeta = tipoTarjeta;
+	}
+
+	private Long getId() {
+		return id;
+	}
+
+	private void setId(Long id) {
+		this.id = id;
 	}
 
 	@Override
 	public int hashCode() {
 		return Objects.hash(numero);
-	}
-
-	public TipoTarjeta getTipoTarjeta() {
-		return tipoTarjeta;
 	}
 
 	@Override
@@ -48,7 +64,12 @@ public class Tarjeta {
 		if (getClass() != obj.getClass())
 			return false;
 		Tarjeta other = (Tarjeta) obj;
-		return numero == other.numero;
+		return Objects.equals(numero, other.numero);
+	}
+
+	@Override
+	public String toString() {
+		return "Tarjeta [numero=" + numero + ", tipoTarjeta=" + tipoTarjeta + "]";
 	}
 
 }
