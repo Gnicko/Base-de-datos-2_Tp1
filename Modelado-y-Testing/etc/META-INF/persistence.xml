@@ -1,0 +1,14 @@
+
+<persistence xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:noNamespaceSchemaLocation="persistence.xsd" xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
+<persistence-unit name="jpa-objectdb">
+ <description>My Persistence Unit</description>
+ <provider>com.objectdb.jpa.Provider</provider>
+ <properties>
+	 <property name="javax.persistence.jdbc.url" value="C:\baseDeDatosObjetos/tp2.odb"/>
+ 	<property name="javax.persistence.jdbc.user" value="admin"/>
+ 	<property name="javax.persistence.jdbc.password" value="admin"/>
+ 
+ </properties>
+</persistence-unit>
+</persistence>
