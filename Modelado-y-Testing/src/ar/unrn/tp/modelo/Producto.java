@@ -38,6 +38,12 @@ public class Producto {
 		this.marca = marca;
 	}
 
+	public Producto(Long id, String codigo, String descripcion, Categoria categoria, double precio, Marca marca)
+			throws RuntimeException {
+		this(codigo, descripcion, categoria, precio, marca);
+		this.id = id;
+	}
+
 	public void setCodigo(String codigo) {
 		this.codigo = codigo;
 	}
@@ -78,7 +84,7 @@ public class Producto {
 		return marca;
 	}
 
-	private Long getId() {
+	public Long getId() {
 		return id;
 	}
 

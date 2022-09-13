@@ -14,12 +14,19 @@ import ar.unrn.tp.modelo.Marca;
 import ar.unrn.tp.modelo.Producto;
 
 public class ProductoManager implements ProductoService {
+	private EntityManagerFactory emf;
+	private EntityManager em;
+	private EntityTransaction tx;
+
+	public ProductoManager(String servicio) {
+		emf = Persistence.createEntityManagerFactory(servicio);
+
+	}
 
 	@Override
 	public void crearProducto(String codigo, String descripcion, float precio, Long idCategoria, Long idMarca) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("jpa-objectdb");
-		EntityManager em = emf.createEntityManager();
-		EntityTransaction tx = em.getTransaction();
+		em = emf.createEntityManager();
+		tx = em.getTransaction();
 		try {
 			tx.begin();
 
@@ -59,9 +66,8 @@ public class ProductoManager implements ProductoService {
 	@Override
 	public void modificarProducto(Long idProducto, String codigo, String descripcion, float precio, Long idCategoria,
 			Long idMarca) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("jpa-objectdb");
-		EntityManager em = emf.createEntityManager();
-		EntityTransaction tx = em.getTransaction();
+		em = emf.createEntityManager();
+		tx = em.getTransaction();
 		try {
 			tx.begin();
 
@@ -109,10 +115,8 @@ public class ProductoManager implements ProductoService {
 
 	@Override
 	public List listarProductos() {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("jpa-objectdb");
-		EntityManager em = emf.createEntityManager();
-		EntityTransaction tx = em.getTransaction();
-
+		em = emf.createEntityManager();
+		tx = em.getTransaction();
 		try {
 			tx.begin();
 			TypedQuery<Producto> q = em.createQuery("select p from Producto p", Producto.class);
@@ -129,9 +133,8 @@ public class ProductoManager implements ProductoService {
 	}
 
 	public void crearCategoria(String nombre) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("jpa-objectdb");
-		EntityManager em = emf.createEntityManager();
-		EntityTransaction tx = em.getTransaction();
+		em = emf.createEntityManager();
+		tx = em.getTransaction();
 		try {
 
 			tx.begin();
@@ -148,9 +151,8 @@ public class ProductoManager implements ProductoService {
 	}
 
 	public void crearMarca(String nombre) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("jpa-objectdb");
-		EntityManager em = emf.createEntityManager();
-		EntityTransaction tx = em.getTransaction();
+		em = emf.createEntityManager();
+		tx = em.getTransaction();
 		try {
 
 			tx.begin();

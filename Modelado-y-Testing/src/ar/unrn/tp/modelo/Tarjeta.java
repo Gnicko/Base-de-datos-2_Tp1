@@ -42,7 +42,7 @@ public class Tarjeta {
 		this.tipoTarjeta = tipoTarjeta;
 	}
 
-	private Long getId() {
+	public Long getId() {
 		return id;
 	}
 

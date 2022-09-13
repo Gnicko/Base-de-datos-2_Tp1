@@ -17,8 +17,8 @@ public class Carrito {
 	}
 
 	public void agregarProducto(Producto producto) {
-		Producto p = new Producto(producto.getCodigo(), producto.getDescripcion(), producto.getCategoria(),
-				producto.getPrecio(), producto.getMarca());
+		Producto p = new Producto(producto.getId(), producto.getCodigo(), producto.getDescripcion(),
+				producto.getCategoria(), producto.getPrecio(), producto.getMarca());
 		productos.add(p);
 	}
 

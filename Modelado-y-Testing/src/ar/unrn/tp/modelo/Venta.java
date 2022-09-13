@@ -16,7 +16,7 @@ public class Venta {
 	@GeneratedValue
 	private Long id;
 	@OneToMany(cascade = CascadeType.PERSIST)
-	private ArrayList<Producto> productos;
+	private ArrayList<ProductoVendido> productos;
 	private double montoTotal;
 	private Date fecha;
 
@@ -34,14 +34,13 @@ public class Venta {
 		this.montoConDescuento = montoConDescuento;
 		this.productos = new ArrayList<>();
 		for (Producto p : productos) {
-			this.productos.add(new Producto(p.getCodigo(), p.getDescripcion(),
-					new Categoria(p.getCategoria().getNombre()), p.getPrecio(), new Marca(p.getMarca().getNombre())));
+			this.productos.add(new ProductoVendido(p.getId(), p.getCodigo(), p.getDescripcion(), p.getPrecio()));
 		}
 	}
 
 	private String mostrarProductos() {
 		String imprimir = "\n";
-		for (Producto p : productos) {
+		for (ProductoVendido p : productos) {
 			imprimir += p.toString() + "\n";
 		}
 		return imprimir;
@@ -53,11 +52,11 @@ public class Venta {
 		return formatter.format(fecha);
 	}
 
-	private ArrayList<Producto> getProductos() {
+	private ArrayList<ProductoVendido> getProductos() {
 		return productos;
 	}
 
-	private void setProductos(ArrayList<Producto> productos) {
+	private void setProductos(ArrayList<ProductoVendido> productos) {
 		this.productos = productos;
 	}
 

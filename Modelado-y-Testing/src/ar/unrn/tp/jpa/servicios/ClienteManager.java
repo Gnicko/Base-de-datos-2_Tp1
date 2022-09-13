@@ -14,12 +14,19 @@ import ar.unrn.tp.modelo.Tarjeta;
 import ar.unrn.tp.modelo.TipoTarjeta;
 
 public class ClienteManager implements ClienteService {
+	private EntityManagerFactory emf;
+	private EntityManager em;
+	private EntityTransaction tx;
+
+	public ClienteManager(String servicio) {
+		emf = Persistence.createEntityManagerFactory(servicio);
+
+	}
 
 	@Override
 	public void crearCliente(String nombre, String apellido, String dni, String email) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("jpa-objectdb");
-		EntityManager em = emf.createEntityManager();
-		EntityTransaction tx = em.getTransaction();
+		em = emf.createEntityManager();
+		tx = em.getTransaction();
 		try {
 
 			tx.begin();
@@ -37,10 +44,8 @@ public class ClienteManager implements ClienteService {
 
 	@Override
 	public void modificarCliente(Long idCliente, String nombre, String apellido, String dni, String email) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("jpa-objectdb");
-		EntityManager em = emf.createEntityManager();
-		EntityTransaction tx = em.getTransaction();
-
+		em = emf.createEntityManager();
+		tx = em.getTransaction();
 		try {
 			tx.begin();
 			Cliente c = em.getReference(Cliente.class, idCliente);
@@ -61,10 +66,8 @@ public class ClienteManager implements ClienteService {
 
 	@Override
 	public void agregarTarjeta(Long idCliente, String nro, String marca) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("jpa-objectdb");
-		EntityManager em = emf.createEntityManager();
-		EntityTransaction tx = em.getTransaction();
-
+		em = emf.createEntityManager();
+		tx = em.getTransaction();
 		try {
 			tx.begin();
 			Cliente c = em.find(Cliente.class, idCliente);
@@ -88,12 +91,11 @@ public class ClienteManager implements ClienteService {
 	}
 
 	@Override
-	public List listarTarjetas(Long idCliente) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("jpa-objectdb");
-		EntityManager em = emf.createEntityManager();
-		EntityTransaction tx = em.getTransaction();
-
+	public List<Tarjeta> listarTarjetas(Long idCliente) {
+		em = emf.createEntityManager();
+		tx = em.getTransaction();
 		try {
+			em = emf.createEntityManager();
 			tx.begin();
 			TypedQuery<Tarjeta> q = em.createQuery("select t from Cliente c join c.tarjetas t where c.id=:id",
 					Tarjeta.class);

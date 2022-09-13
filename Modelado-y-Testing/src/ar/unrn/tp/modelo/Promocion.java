@@ -5,6 +5,8 @@ import java.util.Date;
 
 import javax.persistence.Embeddable;
 
+import ar.unrn.tp.utilidades.ConversorFechas;
+
 @Embeddable
 public abstract class Promocion<T> {
 

@@ -16,13 +16,20 @@ import ar.unrn.tp.modelo.Tienda;
 import ar.unrn.tp.modelo.TipoTarjeta;
 
 public class DescuentoManager implements DescuentoService {
+	private EntityManagerFactory emf;
+	private EntityManager em;
+	private EntityTransaction tx;
+
+	public DescuentoManager(String servicio) {
+		emf = Persistence.createEntityManagerFactory(servicio);
+
+	}
 
 	@Override
 	public void crearDescuentoSobreTotal(String marcaTarjeta, LocalDate fechaDesde, LocalDate fechaHasta,
 			float porcentaje) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("jpa-objectdb");
-		EntityManager em = emf.createEntityManager();
-		EntityTransaction tx = em.getTransaction();
+		em = emf.createEntityManager();
+		tx = em.getTransaction();
 		try {
 
 			tx.begin();
@@ -42,9 +49,8 @@ public class DescuentoManager implements DescuentoService {
 
 	@Override
 	public void crearDescuento(String marcaProducto, LocalDate fechaDesde, LocalDate fechaHasta, float porcentaje) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("jpa-objectdb");
-		EntityManager em = emf.createEntityManager();
-		EntityTransaction tx = em.getTransaction();
+		em = emf.createEntityManager();
+		tx = em.getTransaction();
 		try {
 
 			tx.begin();
@@ -71,9 +77,8 @@ public class DescuentoManager implements DescuentoService {
 	}
 
 	public void crearTienda() {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("jpa-objectdb");
-		EntityManager em = emf.createEntityManager();
-		EntityTransaction tx = em.getTransaction();
+		em = emf.createEntityManager();
+		tx = em.getTransaction();
 		try {
 
 			tx.begin();

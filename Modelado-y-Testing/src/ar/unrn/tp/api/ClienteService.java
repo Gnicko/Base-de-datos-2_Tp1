@@ -2,6 +2,8 @@ package ar.unrn.tp.api;
 
 import java.util.List;
 
+import ar.unrn.tp.modelo.Tarjeta;
+
 public interface ClienteService {
 	// validar que el dni no se repita
 	void crearCliente(String nombre, String apellido, String dni, String email);
@@ -13,5 +15,5 @@ public interface ClienteService {
 	void agregarTarjeta(Long idCliente, String nro, String marca);
 
 	// Devuelve las tarjetas de un cliente específico
-	List listarTarjetas(Long idCliente);
+	List<Tarjeta> listarTarjetas(Long idCliente);
 }

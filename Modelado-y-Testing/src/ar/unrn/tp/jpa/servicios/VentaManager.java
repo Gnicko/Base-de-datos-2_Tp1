@@ -18,12 +18,19 @@ import ar.unrn.tp.modelo.Tienda;
 import ar.unrn.tp.modelo.Venta;
 
 public class VentaManager implements VentaService {
+	private EntityManagerFactory emf;
+	private EntityManager em;
+	private EntityTransaction tx;
+
+	public VentaManager(String servicio) {
+		this.emf = Persistence.createEntityManagerFactory(servicio);
+
+	}
 
 	@Override
 	public void realizarVenta(Long idCliente, List<Long> productos, Long idTarjeta) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("jpa-objectdb");
-		EntityManager em = emf.createEntityManager();
-		EntityTransaction tx = em.getTransaction();
+		em = emf.createEntityManager();
+		tx = em.getTransaction();
 		try {
 
 			tx.begin();
@@ -69,9 +76,8 @@ public class VentaManager implements VentaService {
 
 	@Override
 	public float calcularMonto(List<Long> productos, Long idTarjeta) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("jpa-objectdb");
-		EntityManager em = emf.createEntityManager();
-		EntityTransaction tx = em.getTransaction();
+		em = emf.createEntityManager();
+		tx = em.getTransaction();
 		try {
 
 			tx.begin();
@@ -114,10 +120,8 @@ public class VentaManager implements VentaService {
 
 	@Override
 	public List ventas() {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("jpa-objectdb");
-		EntityManager em = emf.createEntityManager();
-		EntityTransaction tx = em.getTransaction();
-
+		em = emf.createEntityManager();
+		tx = em.getTransaction();
 		try {
 			tx.begin();
 			TypedQuery<Venta> q = em.createQuery("select v from Tienda t join t.ventas v", Venta.class);

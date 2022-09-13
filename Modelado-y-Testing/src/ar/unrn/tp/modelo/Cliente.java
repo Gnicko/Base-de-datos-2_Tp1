@@ -116,4 +116,10 @@ public class Cliente {
 		this.tarjetas = tarjetas;
 	}
 
+	@Override
+	public String toString() {
+		return "Cliente [id=" + id + ", dni=" + dni + ", nombre=" + nombre + ", Apellido=" + Apellido + ", email="
+				+ email + ", tarjetas=" + tarjetas + "]";
+	}
+
 }
