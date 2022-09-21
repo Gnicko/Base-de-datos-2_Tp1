@@ -13,7 +13,6 @@ import ar.unrn.tp.modelo.Marca;
 import ar.unrn.tp.modelo.PromocionCompra;
 import ar.unrn.tp.modelo.PromocionMarca;
 import ar.unrn.tp.modelo.Tienda;
-import ar.unrn.tp.modelo.TipoTarjeta;
 
 public class DescuentoManager implements DescuentoService {
 	private EntityManagerFactory emf;
@@ -33,9 +32,8 @@ public class DescuentoManager implements DescuentoService {
 		try {
 
 			tx.begin();
-			Tienda tienda = em.find(Tienda.class, 27L);
-			tienda.agregarPromocionCompra(new PromocionCompra(TipoTarjeta.valueOf(marcaTarjeta.toUpperCase()),
-					fechaDesde, fechaHasta, (double) porcentaje));
+			Tienda tienda = em.find(Tienda.class, 13L);
+			tienda.agregarPromocion(new PromocionCompra(marcaTarjeta, fechaDesde, fechaHasta, (double) porcentaje));
 			tx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -54,16 +52,16 @@ public class DescuentoManager implements DescuentoService {
 		try {
 
 			tx.begin();
-			Tienda tienda = em.find(Tienda.class, 27L);
+			Tienda tienda = em.find(Tienda.class, 13L);
 
 			TypedQuery<Marca> q = em.createQuery("select m from Marca m where m.nombre=:nombre", Marca.class);
-			q.setParameter("nombre", marcaProducto);
+			q.setParameter("nombre", marcaProducto.toUpperCase());
 			Marca marca = q.getSingleResult();
 			if (marca == null) {
 				throw new RuntimeException("La marca no existe");
 			}
 
-			tienda.agregarPromocionMarca(new PromocionMarca(marca, fechaDesde, fechaHasta, (double) porcentaje));
+			tienda.agregarPromocion(new PromocionMarca(marca.getNombre(), fechaDesde, fechaHasta, (double) porcentaje));
 			tx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -94,4 +92,20 @@ public class DescuentoManager implements DescuentoService {
 		}
 	}
 
+	public Tienda buscarTienda(Long idTienda) {
+		em = emf.createEntityManager();
+		tx = em.getTransaction();
+		try {
+
+			tx.begin();
+			return em.find(Tienda.class, idTienda);
+
+		} catch (Exception e) {
+			tx.rollback();
+			throw new RuntimeException(e);
+		} finally {
+			if (em != null && em.isOpen())
+				em.close();
+		}
+	}
 }

@@ -2,47 +2,59 @@ package ar.unrn.tp.modelo;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.Objects;
 
-import javax.persistence.Embeddable;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
 
 import ar.unrn.tp.utilidades.ConversorFechas;
 
-@Embeddable
-public abstract class Promocion<T> {
-
+@Entity
+@Inheritance
+@DiscriminatorColumn(name = "tipo_promocion")
+public abstract class Promocion {
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
 	private Date fechaDesde;
 	private Date fechaHasta;
 	private double porcentaje;
-
-	public enum Estados {
-		ACTIVO, INACTIVO
-	}
-
-	private Estados estado;
-	private T tipo;
+	private String promocion;
 
 	protected Promocion() {
 
 	}
 
-	Promocion(T tipo, LocalDate fechaDesde, LocalDate fechaHasta, double porcentaje) {
+	Promocion(LocalDate fechaDesde, LocalDate fechaHasta, double porcentaje, String promocion) {
 		if (!validarFechas(fechaDesde, fechaHasta)) {
 			throw new RuntimeException("La fecha de fin debe ser despues de la fecha de inicio");
 		}
 		this.fechaDesde = ConversorFechas.convertirADate(fechaDesde);
 		this.fechaHasta = ConversorFechas.convertirADate(fechaHasta);
-		this.estado = Estados.ACTIVO;
-		this.tipo = tipo;
+
 		this.porcentaje = porcentaje;
+		this.promocion = promocion.toUpperCase();
 
 	}
 
-	protected boolean comparar(T tipo) {
-		return this.tipo.equals(tipo);
+	private Long getId() {
+		return id;
 	}
 
-	public T getTipo() {
-		return this.tipo;
+	private void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getPromocion() {
+		return promocion;
+	}
+
+	private void setPromocion(String promocion) {
+		this.promocion = promocion.toUpperCase();
 	}
 
 	public LocalDate getFechaDesde() {
@@ -72,6 +84,7 @@ public abstract class Promocion<T> {
 		if (fecha.isBefore(desde) || fecha.isAfter(hasta)) {
 			return false;
 		}
+
 		return true;
 	}
 
@@ -91,14 +104,6 @@ public abstract class Promocion<T> {
 		this.porcentaje = porcentaje;
 	}
 
-	private Estados getEstado() {
-		return estado;
-	}
-
-	private void setEstado(Estados estado) {
-		this.estado = estado;
-	}
-
 	private void setFechaDesde(Date fechaDesde) {
 		this.fechaDesde = fechaDesde;
 	}
@@ -107,9 +112,31 @@ public abstract class Promocion<T> {
 		this.fechaHasta = fechaHasta;
 	}
 
-	private void setTipo(T tipo) {
-		this.tipo = tipo;
+	@Override
+	public int hashCode() {
+		return Objects.hash(fechaDesde, fechaHasta, id, porcentaje, promocion);
 	}
 
-	public abstract double obtenerDescuento(T tipo, double monto);
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Promocion other = (Promocion) obj;
+		return Objects.equals(fechaDesde, other.fechaDesde) && Objects.equals(fechaHasta, other.fechaHasta)
+				&& Objects.equals(id, other.id)
+				&& Double.doubleToLongBits(porcentaje) == Double.doubleToLongBits(other.porcentaje)
+				&& Objects.equals(promocion, other.promocion);
+	}
+
+	@Override
+	public String toString() {
+		return "Promocion [id=" + id + ", fechaDesde=" + fechaDesde + ", fechaHasta=" + fechaHasta + ", porcentaje="
+				+ porcentaje + ", promocion=" + promocion + "]";
+	}
+
+	public abstract double obtenerDescuento(String tipo, double monto);
 }

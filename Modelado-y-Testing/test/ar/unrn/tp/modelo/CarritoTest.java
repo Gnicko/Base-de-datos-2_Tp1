@@ -58,68 +58,66 @@ class CarritoTest {
 	@Test
 	void calcularMontoTotalConDescuento() {
 
-		Promocion promMarca = new PromocionMarca(acme, LocalDate.now().minusDays(2), LocalDate.now().minusDays(1),
+		Promocion promMarca = new PromocionMarca("Acme", LocalDate.now().minusDays(2), LocalDate.now().minusDays(1),
 				0.05);
-		Promocion promMarca2 = new PromocionMarca(mm, LocalDate.now().minusDays(2), LocalDate.now().minusDays(1), 0.05);
-		Promocion promCompra = new PromocionCompra(TipoTarjeta.MASTER_CARD, LocalDate.now().minusDays(2),
+		Promocion promMarca2 = new PromocionMarca("MM", LocalDate.now().minusDays(2), LocalDate.now().minusDays(1),
+				0.05);
+		Promocion promCompra = new PromocionCompra(TipoTarjeta.MASTER_CARD.toString(), LocalDate.now().minusDays(2),
 				LocalDate.now().minusDays(1), 0.08);
 
-		tienda.agregarPromocionCompra(promCompra);
-		tienda.agregarPromocionMarca(promMarca);
-		tienda.agregarPromocionMarca(promMarca2);
+		tienda.agregarPromocion(promCompra);
+		tienda.agregarPromocion(promMarca);
+		tienda.agregarPromocion(promMarca2);
 
 		carrito.agregarProducto(producto1);
 		carrito.agregarProducto(producto2);
-		assertEquals(200, carrito.calcularMontoTotalConDescuentos(tienda.getPromocionesCompra(),
-				tienda.getPromocionesMarca(), tarjeta));
+		assertEquals(200, carrito.calcularMontoTotalConDescuentos(tienda.getPromociones(), tarjeta));
 
 	}
 
 	@Test
 	void calcularDescuentoProductosAcme() {
-		Promocion promMarca = new PromocionMarca(acme, LocalDate.now(), LocalDate.now().plusDays(1), 0.05);
-		Promocion promMarca2 = new PromocionMarca(mm, LocalDate.now(), LocalDate.now().plusDays(1), 0.05);
+		PromocionMarca promMarca = new PromocionMarca("Arcor", LocalDate.now(), LocalDate.now().plusDays(1), 0.05);
+		PromocionMarca promMarca2 = new PromocionMarca("MM", LocalDate.now(), LocalDate.now().plusDays(1), 0.05);
 
-		tienda.agregarPromocionMarca(promMarca);
-		tienda.agregarPromocionMarca(promMarca2);
+		tienda.agregarPromocion(promMarca);
+		tienda.agregarPromocion(promMarca2);
 
 		carrito.agregarProducto(producto1);
 		carrito.agregarProducto(producto2);
 		carrito.agregarProducto(producto3);
-		assertEquals(390, carrito.calcularMontoTotalConDescuentos(tienda.getPromocionesCompra(),
-				tienda.getPromocionesMarca(), tarjeta));
+		assertEquals(390, carrito.calcularMontoTotalConDescuentos(tienda.getPromociones(), tarjeta));
 	}
 
 	@Test
 	void calcularDescuentoMedioDePagoVigente() {
-		Promocion promCompra = new PromocionCompra(TipoTarjeta.MASTER_CARD, LocalDate.now().minusDays(2),
-				LocalDate.now().plusDays(1), 0.08);
+		PromocionCompra promCompra = new PromocionCompra(TipoTarjeta.MASTER_CARD.toString(),
+				LocalDate.now().minusDays(2), LocalDate.now().plusDays(1), 0.08);
 
-		tienda.agregarPromocionCompra(promCompra);
+		tienda.agregarPromocion(promCompra);
 
 		carrito.agregarProducto(producto1);
 		carrito.agregarProducto(producto2);
 		carrito.agregarProducto(producto3);
-		assertEquals(368, carrito.calcularMontoTotalConDescuentos(tienda.getPromocionesCompra(),
-				tienda.getPromocionesMarca(), tarjeta));
+		assertEquals(368, carrito.calcularMontoTotalConDescuentos(tienda.getPromociones(), tarjeta));
 
 	}
 
 	@Test
 	void calcularDescuentoDeProductoYTarjeta() {
-		Promocion promCompra = new PromocionCompra(TipoTarjeta.MASTER_CARD, LocalDate.now().minusDays(2),
-				LocalDate.now().plusDays(1), 0.08);
-		Promocion promMarca2 = new PromocionMarca(comarca, LocalDate.now().minusDays(2), LocalDate.now().plusDays(1),
-				0.05);
+		PromocionCompra promCompra = new PromocionCompra(TipoTarjeta.MASTER_CARD.toString(),
+				LocalDate.now().minusDays(2), LocalDate.now().plusDays(1), 0.08);
+		PromocionMarca promMarca2 = new PromocionMarca("Comarca", LocalDate.now().minusDays(2),
+				LocalDate.now().plusDays(1), 0.05);
 
-		tienda.agregarPromocionMarca(promMarca2);
-		tienda.agregarPromocionCompra(promCompra);
+		tienda.agregarPromocion(promMarca2);
+		tienda.agregarPromocion(promCompra);
 
 		carrito.agregarProducto(producto1);
 		carrito.agregarProducto(producto2);
 		carrito.agregarProducto(producto4);
-		assertEquals(402.5, carrito.calcularMontoTotalConDescuentos(tienda.getPromocionesCompra(),
-				tienda.getPromocionesMarca(), tarjeta));
+
+		assertEquals(402.5, carrito.calcularMontoTotalConDescuentos(tienda.getPromociones(), tarjeta));
 	}
 
 	@Test
@@ -128,7 +126,6 @@ class CarritoTest {
 		carrito.agregarProducto(producto2);
 		carrito.agregarProducto(producto4);
 
-		assertEquals(Venta.class,
-				carrito.pagar(tienda.getPromocionesCompra(), tienda.getPromocionesMarca(), tarjeta).getClass());
+		assertEquals(Venta.class, carrito.pagar(tienda.getPromociones(), tarjeta).getClass());
 	}
 }

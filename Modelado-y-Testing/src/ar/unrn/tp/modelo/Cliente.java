@@ -7,13 +7,15 @@ import javax.jdo.annotations.Unique;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
 @Entity
 public class Cliente {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	@Unique
 	private String dni;
@@ -21,6 +23,7 @@ public class Cliente {
 	private String Apellido;
 	private String email;
 	@OneToMany(cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "id_cliente")
 	private Set<Tarjeta> tarjetas;
 
 	protected Cliente() {

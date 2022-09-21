@@ -2,23 +2,25 @@ package ar.unrn.tp.modelo;
 
 import java.time.LocalDate;
 
-import javax.persistence.Embeddable;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 
-@Embeddable
-public class PromocionCompra extends Promocion<TipoTarjeta> {
+@Entity
+@DiscriminatorValue("PC")
+public class PromocionCompra extends Promocion {
 
 	protected PromocionCompra() {
 
 	}
 
-	public PromocionCompra(TipoTarjeta tarjeta, LocalDate fechaDesde, LocalDate fechaHasta, double porcentaje) {
-		super(tarjeta, fechaDesde, fechaHasta, porcentaje);
+	public PromocionCompra(String tarjeta, LocalDate fechaDesde, LocalDate fechaHasta, double porcentaje) {
+		super(fechaDesde, fechaHasta, porcentaje, tarjeta);
 
 	}
 
 	@Override
-	public double obtenerDescuento(TipoTarjeta tarjeta, double monto) {
-		if (estaActiva() && comparar(tarjeta)) {
+	public double obtenerDescuento(String tarjeta, double monto) {
+		if (estaActiva() && getPromocion().equals(tarjeta)) {
 			return (getPorcentaje() * monto);
 
 		}

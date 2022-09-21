@@ -26,28 +26,28 @@ public class Carrito {
 		return productos.stream().mapToDouble(Producto::getPrecio).sum();
 	}
 
-	public double calcularMontoTotalConDescuentos(Set<Promocion> promocionesCompra, Set<Promocion> promocionesMarca,
-			Tarjeta tarjeta) {
+	public double calcularMontoTotalConDescuentos(Set<Promocion> promociones, Tarjeta tarjeta) {
 		double descuento = 0;
 
 		double montoConDescuento = calcularMontoTotal();
 
 		// validar tarjeta con algun servicio para continuar//
 
-		if (promocionesMarca != null && productos != null) {
+		if (promociones != null && productos != null) {
 			for (Producto p : productos) {
 
-				for (Promocion prom : promocionesMarca) {
-					descuento += prom.obtenerDescuento(p.getMarca(), p.getPrecio());
+				for (Promocion prom : promociones) {
+					descuento += prom.obtenerDescuento(p.getMarca().getNombre(), p.getPrecio());
 
 				}
 			}
 		}
 		montoConDescuento -= descuento;
 		descuento = 0;
-		if (promocionesCompra != null) {
-			for (Promocion prom : promocionesCompra) {
-				descuento = prom.obtenerDescuento(tarjeta.getTipoTarjeta(), montoConDescuento);
+		if (promociones != null) {
+			for (Promocion prom : promociones) {
+
+				descuento += prom.obtenerDescuento(tarjeta.getTipoTarjeta().toString(), montoConDescuento);
 
 			}
 		}
@@ -56,10 +56,10 @@ public class Carrito {
 		return montoConDescuento;
 	}
 
-	public Venta pagar(Set<Promocion> promocionesCompra, Set<Promocion> promocionesMarca, Tarjeta tarjeta) {
+	public Venta pagar(Set<Promocion> promociones, Tarjeta tarjeta) {
 
-		return new Venta(this.cliente, this.productos,
-				calcularMontoTotalConDescuentos(promocionesCompra, promocionesMarca, tarjeta), calcularMontoTotal());
+		return new Venta(this.cliente, this.productos, calcularMontoTotalConDescuentos(promociones, tarjeta),
+				calcularMontoTotal());
 
 	}
 

@@ -59,8 +59,8 @@ public class VentaManager implements VentaService {
 			for (Producto p : productosLista) {
 				carrito.agregarProducto(p);
 			}
-			Tienda tienda = em.find(Tienda.class, 27L);
-			Venta venta = carrito.pagar(tienda.getPromocionesCompra(), tienda.getPromocionesMarca(), tarjeta);
+			Tienda tienda = em.find(Tienda.class, 13L);
+			Venta venta = carrito.pagar(tienda.getPromociones(), tarjeta);
 
 			tienda.agregarVenta(venta);
 			tx.commit();
@@ -103,10 +103,9 @@ public class VentaManager implements VentaService {
 			for (Producto p : productosLista) {
 				carrito.agregarProducto(p);
 			}
-			Tienda tienda = em.find(Tienda.class, 27L);
+			Tienda tienda = em.find(Tienda.class, 13L);
 
-			return (float) carrito.calcularMontoTotalConDescuentos(tienda.getPromocionesCompra(),
-					tienda.getPromocionesMarca(), tarjeta);
+			return (float) carrito.calcularMontoTotalConDescuentos(tienda.getPromociones(), tarjeta);
 
 		} catch (Exception e) {
 			e.printStackTrace();

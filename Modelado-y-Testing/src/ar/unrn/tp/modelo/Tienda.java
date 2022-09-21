@@ -7,6 +7,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
 @Entity
@@ -15,52 +16,39 @@ public class Tienda {
 	@GeneratedValue
 	private Long id;
 	@OneToMany(cascade = CascadeType.PERSIST)
-	private Set<Promocion> promocionesCompra;
+	@JoinColumn(name = "id_tienda")
+	private Set<Promocion> promociones;
+
 	@OneToMany(cascade = CascadeType.PERSIST)
-	private Set<Promocion> promocionesMarca;
-	@OneToMany(cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "id_tienda")
 	private Set<Venta> ventas;
 
 	public Tienda() {
-		this.promocionesCompra = new HashSet<>();
-		this.promocionesMarca = new HashSet<>();
+		this.promociones = new HashSet<>();
+
 		this.ventas = new HashSet<>();
 	}
 
-	public void agregarPromocionCompra(Promocion<TipoTarjeta> promocionCompra) {
-		if (!promocionesCompra.isEmpty()) {
-			for (Promocion prom : this.promocionesCompra) {
-				if ((prom.seSuperpone(promocionCompra.getFechaDesde())
-						&& (prom.seSuperpone(promocionCompra.getFechaDesde())
-								&& ((TipoTarjeta) prom.getTipo()).equals(promocionCompra.getTipo())))) {
+	public void agregarPromocion(Promocion promocion) {
+		if (!promociones.isEmpty()) {
+			for (Promocion prom : this.promociones) {
+				if (prom.equals(promocion)
+						|| ((prom.seSuperpone(promocion.getFechaDesde()) || prom.seSuperpone(promocion.getFechaDesde()))
+								&& prom.getPromocion().equals(promocion.getPromocion()))) {
 					throw new RuntimeException("Ya existe un promocion activa de este tipo ");
 				}
 			}
 		}
-		this.promocionesCompra.add(promocionCompra);
+		this.promociones.add(promocion);
 
-	}
-
-	public void agregarPromocionMarca(Promocion<Marca> promocionMarca) {
-		for (Promocion prom : this.promocionesMarca) {
-			if ((prom.estaActiva() && ((Marca) prom.getTipo()).equals(promocionMarca.getTipo()))) {
-				throw new RuntimeException("Ya existe un promocion activa de este tipo");
-			}
-		}
-
-		this.promocionesMarca.add(promocionMarca);
 	}
 
 	public void agregarVenta(Venta venta) {
 		this.ventas.add(venta);
 	}
 
-	public Set<Promocion> getPromocionesCompra() {
-		return promocionesCompra;
-	}
-
-	public Set<Promocion> getPromocionesMarca() {
-		return promocionesMarca;
+	public Set<Promocion> getPromociones() {
+		return promociones;
 	}
 
 	private Long getId() {
@@ -71,12 +59,8 @@ public class Tienda {
 		this.id = id;
 	}
 
-	private void setPromocionesCompra(Set<Promocion> promocionesCompra) {
-		this.promocionesCompra = promocionesCompra;
-	}
-
-	private void setPromocionesMarca(Set<Promocion> promocionesMarca) {
-		this.promocionesMarca = promocionesMarca;
+	private void setPromociones(Set<Promocion> promociones) {
+		this.promociones = promociones;
 	}
 
 	public Set<Venta> getVentas() {
@@ -85,6 +69,11 @@ public class Tienda {
 
 	private void setVentas(Set<Venta> ventas) {
 		this.ventas = ventas;
+	}
+
+	@Override
+	public String toString() {
+		return "Tienda [id=" + id + ", promociones=" + promociones + ", ventas=" + ventas + "]";
 	}
 
 }

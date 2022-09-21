@@ -11,18 +11,17 @@ class TiendaTest {
 	@Test
 	void validarAgregarPromociones() {
 
-		Promocion promCompra1 = new PromocionCompra(TipoTarjeta.MASTER_CARD, LocalDate.now(),
+		PromocionCompra promCompra1 = new PromocionCompra(TipoTarjeta.MASTER_CARD.toString(), LocalDate.now(),
 				LocalDate.now().plusDays(1), 0.08);
-		Promocion promCompra2 = new PromocionCompra(TipoTarjeta.MASTER_CARD, LocalDate.now().plusDays(2),
-				LocalDate.now().plusDays(3), 0.08);
-		
+		PromocionCompra promCompra2 = new PromocionCompra(TipoTarjeta.MASTER_CARD.toString(),
+				LocalDate.now().plusDays(2), LocalDate.now().plusDays(3), 0.08);
 
 		Tienda tienda = new Tienda();
 
-		tienda.agregarPromocionCompra(promCompra1);
-		tienda.agregarPromocionCompra(promCompra2);
-		
-		assertThrows(RuntimeException.class, () -> tienda.agregarPromocionCompra(promCompra2));
+		tienda.agregarPromocion(promCompra1);
+		tienda.agregarPromocion(promCompra2);
+
+		assertThrows(RuntimeException.class, () -> tienda.agregarPromocion(promCompra2));
 	}
 
 }

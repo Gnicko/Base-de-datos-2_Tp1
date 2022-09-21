@@ -3,23 +3,28 @@ package ar.unrn.tp.modelo;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Venta {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	@OneToMany(cascade = CascadeType.PERSIST)
-	private ArrayList<ProductoVendido> productos;
+	@JoinColumn(name = "id_venta")
+	private List<ProductoVendido> productos;
 	private double montoTotal;
 	private Date fecha;
-
+	@OneToOne(cascade = CascadeType.PERSIST)
 	private Cliente cliente;
 	private double montoConDescuento;
 
@@ -27,7 +32,7 @@ public class Venta {
 
 	}
 
-	public Venta(Cliente cliente, ArrayList<Producto> productos, double montoConDescuento, double montoTotal) {
+	public Venta(Cliente cliente, List<Producto> productos, double montoConDescuento, double montoTotal) {
 		this.cliente = cliente;
 		this.fecha = new Date();
 		this.montoTotal = montoTotal;
@@ -52,7 +57,7 @@ public class Venta {
 		return formatter.format(fecha);
 	}
 
-	private ArrayList<ProductoVendido> getProductos() {
+	private List<ProductoVendido> getProductos() {
 		return productos;
 	}
 

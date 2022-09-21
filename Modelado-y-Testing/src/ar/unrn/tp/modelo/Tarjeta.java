@@ -3,6 +3,8 @@ package ar.unrn.tp.modelo;
 import java.util.Objects;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
@@ -13,7 +15,7 @@ public class Tarjeta {
 	private Long id;
 
 	private String numero;
-
+	@Enumerated(EnumType.STRING)
 	private TipoTarjeta tipoTarjeta;
 
 	protected Tarjeta() {

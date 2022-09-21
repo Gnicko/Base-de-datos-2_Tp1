@@ -33,6 +33,7 @@ public class VentanaCompra extends JFrame {
 	private List<Producto> productos = new ArrayList<>();
 	private List<Tarjeta> tarjetas = new ArrayList();
 	private DefaultListModel<Producto> modeloProductosCompra = new DefaultListModel();
+	private Long idTienda;
 
 	/**
 	 * Launch the application.
@@ -54,11 +55,12 @@ public class VentanaCompra extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public VentanaCompra(ProductoService ps, VentaService vs, ClienteService cs, Long idCliente) {
+	public VentanaCompra(ProductoService ps, VentaService vs, ClienteService cs, Long idCliente, Long idTienda) {
 		this.productoService = ps;
 		this.ventaService = vs;
 		this.clienteService = cs;
 		this.idCliente = idCliente;
+		this.idTienda = idTienda;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 919, 552);
 		contentPane = new JPanel();
