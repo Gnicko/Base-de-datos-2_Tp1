@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Version;
 
 @Entity
 public class Producto {
@@ -20,6 +21,9 @@ public class Producto {
 	private double precio;
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	private Marca marca;
+
+	@Version
+	private Long version;
 
 	protected Producto() {
 
@@ -45,12 +49,30 @@ public class Producto {
 		this.id = id;
 	}
 
+	public Producto(Long id, String codigo, String descripcion, Categoria categoria, double precio, Marca marca,
+			Long version) throws RuntimeException {
+		this(codigo, descripcion, categoria, precio, marca);
+		this.id = id;
+		this.version = version;
+	}
+
 	public void setCodigo(String codigo) {
 		this.codigo = codigo;
 	}
 
 	public void setDescripcion(String descripcion) {
+		if (descripcion.isBlank()) {
+			throw new RuntimeException("La descripcion no puede ser vacia");
+		}
 		this.descripcion = descripcion;
+	}
+
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
 	}
 
 	public void setCategoria(Categoria categoria) {

@@ -1,9 +1,7 @@
 package ar.unrn.tp.main;
 
-import ar.unrn.tp.jpa.servicios.ClienteManager;
 import ar.unrn.tp.jpa.servicios.ProductoManager;
-import ar.unrn.tp.jpa.servicios.VentaManager;
-import ar.unrn.tp.ui.VentanaCompra;
+import ar.unrn.tp.ui.VentanaModificarProducto;
 
 public class Main {
 
@@ -14,7 +12,7 @@ public class Main {
 //		cli.agregarTarjeta(1L, "5404895487", "Visa");
 
 		// Productos service
-//		ProductoManager prod = new ProductoManager("jpa-mysql");
+		ProductoManager prod = new ProductoManager("jpa-mysql");
 //		prod.crearCategoria("Comida");
 //		prod.crearCategoria("Bebida");
 //		prod.crearMarca("Arcor");
@@ -24,6 +22,8 @@ public class Main {
 //		prod.crearProducto("12224", "fideos", 100, 4L, 6L);
 //		prod.crearProducto("12225", "galletita", 100, 4L, 7L);
 //		prod.crearProducto("12223", "Gaseosa", 200, 5L, 8L);
+//		prod.modificarProducto(9L, "1", "arroz", 200, 4L, 6L);
+//		prod.modificarProducto(9L, "12222", "arroz", 200, 4L, 6L);
 
 		// Descueto service
 //		DescuentoManager desc = new DescuentoManager("jpa-mysql");
@@ -40,9 +40,13 @@ public class Main {
 //		System.out.println(venta.calcularMonto(productos, 28L));
 //		System.out.println(venta.ventas());
 
-		VentanaCompra ventana = new VentanaCompra(new ProductoManager("jpa-mysql"), new VentaManager("jpa-mysql"),
-				new ClienteManager("jpa-mysql"), 1L, 13L);
-		ventana.setVisible(true);
+//		VentanaCompra ventana = new VentanaCompra(new ProductoManager("jpa-mysql"), new VentaManager("jpa-mysql"),
+//				new ClienteManager("jpa-mysql"), 1L, 13L);
+//		ventana.setVisible(true);
+
+		VentanaModificarProducto frame = new VentanaModificarProducto(new ProductoManager("jpa-mysql"), 9L);
+		frame.setVisible(true);
+
 	}
 
 }

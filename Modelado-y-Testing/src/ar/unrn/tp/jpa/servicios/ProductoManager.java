@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import javax.persistence.OptimisticLockException;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
@@ -66,43 +67,38 @@ public class ProductoManager implements ProductoService {
 
 	@Override
 	public void modificarProducto(Long idProducto, String codigo, String descripcion, float precio, Long idCategoria,
-			Long idMarca) {
+			Long idMarca, Long version) {
 		em = emf.createEntityManager();
 		tx = em.getTransaction();
 		try {
 			tx.begin();
 
-			Producto p = em.find(Producto.class, idProducto);
-
 			TypedQuery<Producto> qp = em.createQuery("select p from Producto p where p.codigo=:codigo", Producto.class);
 			qp.setParameter("codigo", codigo);
 
-			if (!qp.getResultList().isEmpty() && !p.getCodigo().equals(codigo)) {
-				throw new RuntimeException("Ya Existe este codigo de producto");
-			}
-
 			Marca marca = em.find(Marca.class, idMarca);
-//			TypedQuery<Marca> q = em.createQuery("select m from Marca m where m.id=:id", Marca.class);
-//			q.setParameter("id", marca.getId());
-//			Marca marcaAux = q.getSingleResult();
-//			if (marcaAux == null) {
-//				throw new RuntimeException("La marca no existe");
-//			}
 
-//			TypedQuery<Categoria> q1 = em.createQuery("select c from Categoria c where c.id=:id", Categoria.class);
-//			q1.setParameter("id", categoria.getId());
-//			Categoria categoriaAux = q1.getSingleResult();
-//			if (categoriaAux == null) {
-//				throw new RuntimeException("La categoria no existe");
-//			}
+			if (marca == null) {
+				throw new RuntimeException("La marca no existe");
+			}
 			Categoria categoria = em.find(Categoria.class, idCategoria);
+			if (categoria == null) {
+				throw new RuntimeException("La categoria no existe");
+			}
+			Producto p = new Producto(idProducto, codigo, descripcion, categoria, Double.valueOf(precio), marca,
+					version);
 
 			p.setCategoria(categoria);
 			p.setCodigo(codigo);
 			p.setDescripcion(descripcion);
 			p.setMarca(marca);
 			p.setPrecio(precio);
-
+			p.setVersion(version);
+			try {
+				em.merge(p);
+			} catch (OptimisticLockException e1) {
+				throw new RuntimeException("Alguien ya modifico el producto");
+			}
 			tx.commit();
 		} catch (Exception e) {
 			tx.rollback();
@@ -169,4 +165,62 @@ public class ProductoManager implements ProductoService {
 		}
 	}
 
+	public Producto buscarProducto(Long id) {
+		em = emf.createEntityManager();
+		tx = em.getTransaction();
+		try {
+
+			tx.begin();
+			Producto p = em.find(Producto.class, id);
+			if (p == null) {
+				throw new RuntimeException("El producto no existe");
+			}
+			return p;
+
+		} catch (Exception e) {
+			tx.rollback();
+			throw new RuntimeException(e);
+		} finally {
+			if (em != null && em.isOpen())
+				em.close();
+		}
+	}
+
+	@Override
+	public List<Categoria> listarCategorias() {
+		em = emf.createEntityManager();
+		tx = em.getTransaction();
+		try {
+			tx.begin();
+			TypedQuery<Categoria> q = em.createQuery("from Categoria", Categoria.class);
+
+			List<Categoria> categorias = q.getResultList();
+			return categorias;
+		} catch (Exception e) {
+			tx.rollback();
+			throw new RuntimeException(e);
+		} finally {
+			if (em != null && em.isOpen())
+				em.close();
+		}
+	}
+
+	@Override
+	public List<Marca> listarMarcas() {
+		em = emf.createEntityManager();
+		tx = em.getTransaction();
+		try {
+			tx.begin();
+			TypedQuery<Marca> q = em.createQuery("from Marca", Marca.class);
+
+			List<Marca> marcas = q.getResultList();
+			return marcas;
+		} catch (Exception e) {
+			tx.rollback();
+			throw new RuntimeException(e);
+		} finally {
+			if (em != null && em.isOpen())
+				em.close();
+		}
+	}
 }

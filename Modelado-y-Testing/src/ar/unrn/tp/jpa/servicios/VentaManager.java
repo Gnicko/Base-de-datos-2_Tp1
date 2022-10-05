@@ -1,17 +1,20 @@
 package ar.unrn.tp.jpa.servicios;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import javax.persistence.LockModeType;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
 import ar.unrn.tp.api.VentaService;
 import ar.unrn.tp.modelo.Carrito;
 import ar.unrn.tp.modelo.Cliente;
+import ar.unrn.tp.modelo.IdVenta;
 import ar.unrn.tp.modelo.Producto;
 import ar.unrn.tp.modelo.Tarjeta;
 import ar.unrn.tp.modelo.Tienda;
@@ -61,7 +64,25 @@ public class VentaManager implements VentaService {
 			}
 			Tienda tienda = em.find(Tienda.class, 13L);
 			Venta venta = carrito.pagar(tienda.getPromociones(), tarjeta);
+			int anio = LocalDate.now().getYear();
+			TypedQuery<IdVenta> q = em.createQuery("from IdVenta where anio=:anio", IdVenta.class);
+			q.setParameter("anio", anio);
+			q.setLockMode(LockModeType.PESSIMISTIC_WRITE);
 
+			List<IdVenta> idVentas = q.getResultList();
+			int idNumero = 0;
+
+			if (idVentas.isEmpty()) {
+				IdVenta idVenta = new IdVenta(1, anio);
+				idNumero = 1;
+				em.persist(idVenta);
+			} else {
+				idNumero = idVentas.get(0).siguienteNumero();
+			}
+
+			String id = idNumero + "-" + anio;
+
+			venta.setId(id);
 			tienda.agregarVenta(venta);
 			tx.commit();
 		} catch (Exception e) {

@@ -1,11 +1,13 @@
 package ar.unrn.tp.modelo;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
 public class ProductoVendido {
 	@Id
+	@GeneratedValue
 	private Long id;
 	private String codigo;
 	private String descripcion;
@@ -15,9 +17,9 @@ public class ProductoVendido {
 
 	}
 
-	public ProductoVendido(Long id, String codigo, String descripcion, double precio) {
+	public ProductoVendido(String codigo, String descripcion, double precio) {
 		super();
-		this.id = id;
+
 		this.codigo = codigo;
 		this.descripcion = descripcion;
 		this.precio = precio;

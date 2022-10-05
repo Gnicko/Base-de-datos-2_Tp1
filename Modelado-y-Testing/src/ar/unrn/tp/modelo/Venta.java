@@ -7,8 +7,6 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
@@ -17,8 +15,8 @@ import javax.persistence.OneToOne;
 @Entity
 public class Venta {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+
+	private String id;
 	@OneToMany(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "id_venta")
 	private List<ProductoVendido> productos;
@@ -39,7 +37,19 @@ public class Venta {
 		this.montoConDescuento = montoConDescuento;
 		this.productos = new ArrayList<>();
 		for (Producto p : productos) {
-			this.productos.add(new ProductoVendido(p.getId(), p.getCodigo(), p.getDescripcion(), p.getPrecio()));
+			this.productos.add(new ProductoVendido(p.getCodigo(), p.getDescripcion(), p.getPrecio()));
+		}
+	}
+
+	public Venta(String id, Cliente cliente, List<Producto> productos, double montoConDescuento, double montoTotal) {
+		this.id = id;
+		this.cliente = cliente;
+		this.fecha = new Date();
+		this.montoTotal = montoTotal;
+		this.montoConDescuento = montoConDescuento;
+		this.productos = new ArrayList<>();
+		for (Producto p : productos) {
+			this.productos.add(new ProductoVendido(p.getCodigo(), p.getDescripcion(), p.getPrecio()));
 		}
 	}
 
@@ -97,11 +107,11 @@ public class Venta {
 		this.montoConDescuento = montoConDescuento;
 	}
 
-	private Long getId() {
+	private String getId() {
 		return id;
 	}
 
-	private void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
