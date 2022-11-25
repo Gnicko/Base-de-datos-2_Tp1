@@ -2,6 +2,8 @@ package ar.unrn.tp.api;
 
 import java.util.List;
 
+import ar.unrn.tp.modelo.Venta;
+
 public interface VentaService {
 	// Crea una venta. El monto se calcula aplicando los descuentos a la fecha
 	// validaciones:
@@ -16,4 +18,6 @@ public interface VentaService {
 
 	// Devuelve todas las ventas realizadas
 	List ventas();
+
+	public List<Venta> ultimasVentas(Long id);
 }

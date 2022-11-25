@@ -1,7 +1,9 @@
 package ar.unrn.tp.jpa.servicios;
 
+import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -11,6 +13,9 @@ import javax.persistence.LockModeType;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import ar.unrn.tp.api.VentaService;
 import ar.unrn.tp.modelo.Carrito;
 import ar.unrn.tp.modelo.Cliente;
@@ -19,6 +24,8 @@ import ar.unrn.tp.modelo.Producto;
 import ar.unrn.tp.modelo.Tarjeta;
 import ar.unrn.tp.modelo.Tienda;
 import ar.unrn.tp.modelo.Venta;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 public class VentaManager implements VentaService {
 	private EntityManagerFactory emf;
@@ -93,6 +100,9 @@ public class VentaManager implements VentaService {
 			if (em != null && em.isOpen())
 				em.close();
 		}
+		JedisPool pool = new JedisPool("localhost", 6379);
+		Jedis jedis = pool.getResource();
+		jedis.hdel("user:" + idCliente, "ventas");
 	}
 
 	@Override
@@ -156,6 +166,53 @@ public class VentaManager implements VentaService {
 				em.close();
 		}
 
+	}
+
+	@Override
+	public List<Venta> ultimasVentas(Long id) {
+		em = emf.createEntityManager();
+		tx = em.getTransaction();
+
+		List<Venta> ventas = new ArrayList<>();
+		JedisPool pool = new JedisPool("localhost", 6379);
+		Jedis jedis = pool.getResource();
+		String cache = jedis.hget("user:" + id, "ventas");
+		Gson gson = new Gson();
+		if (cache == null) {
+
+			try {
+				tx.begin();
+				TypedQuery<Venta> q = em.createQuery(
+						" select v from Venta v where v.cliente.id=:id ORDER BY v.fecha DESC", Venta.class);
+				q.setParameter("id", id);
+				List<Venta> v = q.getResultList();
+				if (v.isEmpty()) {
+					throw new RuntimeException("No hay ventas para el cliente");
+				}
+				// iterar mientras tenga elementos y obtener los primeros 3
+				Iterator<Venta> i = v.iterator();
+				int cont = 1;
+				while (i.hasNext() && cont < 4) {
+					ventas.add(i.next());
+					cont++;
+				}
+
+				String json = gson.toJson(ventas);
+				jedis.hset("user:" + id, "ventas", json);
+
+			} catch (Exception e) {
+				tx.rollback();
+				throw new RuntimeException(e);
+			} finally {
+				if (em != null && em.isOpen())
+					em.close();
+			}
+		} else {
+			Type tipoVenta = new TypeToken<List<Venta>>() {
+			}.getType();
+			ventas = gson.fromJson(cache, tipoVenta);
+		}
+		return ventas;
 	}
 
 }

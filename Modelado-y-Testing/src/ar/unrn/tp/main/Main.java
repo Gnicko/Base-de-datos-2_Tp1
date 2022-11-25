@@ -1,7 +1,9 @@
 package ar.unrn.tp.main;
 
+import ar.unrn.tp.jpa.servicios.ClienteManager;
 import ar.unrn.tp.jpa.servicios.ProductoManager;
-import ar.unrn.tp.ui.VentanaModificarProducto;
+import ar.unrn.tp.jpa.servicios.VentaManager;
+import ar.unrn.tp.ui.VentanaCompra;
 
 public class Main {
 
@@ -12,7 +14,7 @@ public class Main {
 //		cli.agregarTarjeta(1L, "5404895487", "Visa");
 
 		// Productos service
-		ProductoManager prod = new ProductoManager("jpa-mysql");
+//		ProductoManager prod = new ProductoManager("jpa-mysql");
 //		prod.crearCategoria("Comida");
 //		prod.crearCategoria("Bebida");
 //		prod.crearMarca("Arcor");
@@ -32,20 +34,27 @@ public class Main {
 //		desc.crearDescuento("Arcor", LocalDate.now(), LocalDate.now().plusDays(1), 0.05f);
 //
 //		// Venta service
-//		VentaManager venta = new VentaManager("jpa-mysql");
+		VentaManager venta = new VentaManager("jpa-mysql");
 //		List<Long> productos = new ArrayList<>();
 //		productos.add(20L);
 //		productos.add(46L);
-//		venta.realizarVenta(1L, productos, 28L);
+//		venta.realizarVenta(1L, productos, red28L);
 //		System.out.println(venta.calcularMonto(productos, 28L));
 //		System.out.println(venta.ventas());
 
-//		VentanaCompra ventana = new VentanaCompra(new ProductoManager("jpa-mysql"), new VentaManager("jpa-mysql"),
-//				new ClienteManager("jpa-mysql"), 1L, 13L);
-//		ventana.setVisible(true);
+		VentanaCompra ventana = new VentanaCompra(new ProductoManager("jpa-mysql"), new VentaManager("jpa-mysql"),
+				new ClienteManager("jpa-mysql"), 1L, 13L);
+		ventana.setVisible(true);
 
-		VentanaModificarProducto frame = new VentanaModificarProducto(new ProductoManager("jpa-mysql"), 9L);
-		frame.setVisible(true);
+//		VentanaModificarProducto frame = new VentanaModificarProducto(new ProductoManager("jpa-mysql"), 9L);
+//		frame.setVisible(true);
+
+//		JedisPool pool = new JedisPool("localhost", 6379);
+//		Jedis jedis = pool.getResource();
+//		jedis.hset("user", "nombre", "nico");
+//		System.out.println(jedis.get("edad"));
+//		List<Venta> v = venta.ultimasVentas(1L);
+//		System.out.println(v);
 
 	}
 

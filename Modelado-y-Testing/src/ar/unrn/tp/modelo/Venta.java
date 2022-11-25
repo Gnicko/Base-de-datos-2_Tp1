@@ -107,7 +107,7 @@ public class Venta {
 		this.montoConDescuento = montoConDescuento;
 	}
 
-	private String getId() {
+	public String getId() {
 		return id;
 	}
 
